@@ -5,6 +5,7 @@ declare(strict_types=1);
 return [
     'title' => 'Banner',
     'subtitle' => 'Kelola banner gambar, tautan, dan status publikasi.',
+    'install' => 'Tabel Banner belum tersedia. Jalankan php artisan nuewire:banner:install --migrate.',
     'new' => 'Tambah Banner',
     'search' => 'Cari nama banner',
     'all' => 'Semua',

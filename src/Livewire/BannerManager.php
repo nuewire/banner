@@ -6,6 +6,7 @@ namespace Nuewire\Banner\Livewire;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
@@ -34,7 +35,32 @@ final class BannerManager extends Component
     public function requestDelete(int $id):void{$this->ensureAuthorized('banner.delete');$b=Banner::query()->findOrFail($id);$this->deleteId=$b->id;$this->deleteName=(string)$b->nama;$this->deleteConfirmation='';$this->deleteOpen=true;}
     public function delete(BannerFileManager $files,BannerActivityLogger $activity):void{$this->ensureAuthorized('banner.delete');$b=Banner::query()->findOrFail($this->deleteId);if((bool)config('nuewire.banner.delete.require_exact_name',true)&&!hash_equals((string)$b->nama,$this->deleteConfirmation)){$this->addError('deleteConfirmation',$this->t('validation.confirm_name'));return;}$props=['nama'=>$b->nama,'file_extension'=>$b->file_extension,'file_size'=>$b->file_size];$files->delete($b);$b->delete();$activity->record('banner.deleted','deleted',$b,$props);$this->deleteOpen=false;$this->message=$this->t('messages.deleted');$this->errorMessage=null;}
     public function closeEditor():void{$this->resetEditor();}public function closeDelete():void{$this->deleteOpen=false;$this->deleteId=null;$this->deleteConfirmation='';}
-    public function render(){ $q=Banner::query()->latest('id');if($this->filter==='active'){$q->where('is_aktif',true);}if($this->filter==='inactive'){$q->where('is_aktif',false);}if(trim($this->search)!==''){$q->where('nama','like','%'.trim($this->search).'%');}return view('nuewire-banner::livewire.manager',['banners'=>$q->paginate(15),'canCreate'=>$this->canDo('banner.create'),'canUpdate'=>$this->canDo('banner.update'),'canDelete'=>$this->canDo('banner.delete')]);}
+    public function render()
+    {
+        $ready = $this->tableReady();
+        $banners = null;
+
+        if ($ready) {
+            $q=Banner::query()->latest('id');
+            if($this->filter==='active'){$q->where('is_aktif',true);}
+            if($this->filter==='inactive'){$q->where('is_aktif',false);}
+            if(trim($this->search)!==''){$q->where('nama','like','%'.trim($this->search).'%');}
+            $banners = $q->paginate(15);
+        }
+
+        return view('nuewire-banner::livewire.manager',['ready'=>$ready,'banners'=>$banners,'canCreate'=>$this->canDo('banner.create'),'canUpdate'=>$this->canDo('banner.update'),'canDelete'=>$this->canDo('banner.delete')]);
+    }
+
+    private function tableReady(): bool
+    {
+        try {
+            $model = new Banner();
+
+            return Schema::connection($model->getConnectionName())->hasTable($model->getTable());
+        } catch (Throwable) {
+            return false;
+        }
+    }
     private function resetEditor():void{$this->editorOpen=false;$this->editingId=null;$this->nama='';$this->url='';$this->target='_self';$this->isAktif=true;$this->upload=null;$this->currentAssetUrl=null;$this->resetValidation();}
     private function blank(string $v):?string{$v=trim($v);return $v===''?null:$v;}
     private function safeUrlRule():Closure{return static function(string $attribute,mixed $value,Closure $fail):void{$value=trim((string)$value);if($value===''||str_starts_with($value,'/')||str_starts_with($value,'#')){return;}$scheme=strtolower((string)parse_url($value,PHP_URL_SCHEME));if(!in_array($scheme,['http','https','mailto','tel'],true)){$fail('URL tidak diizinkan.');}};}

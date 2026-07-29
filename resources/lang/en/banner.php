@@ -5,6 +5,7 @@ declare(strict_types=1);
 return [
     'title' => 'Banner',
     'subtitle' => 'Manage image banners, destination links, and publication status.',
+    'install' => 'The Banner table is not available. Run php artisan nuewire:banner:install --migrate.',
     'new' => 'Add Banner',
     'search' => 'Search banner name',
     'all' => 'All',
