@@ -1,0 +1,69 @@
+{
+  "name": "nuewire/banner",
+  "description": "Website banner management with filesystem storage and audit trails for Nuewire.",
+  "keywords": [
+    "laravel",
+    "livewire",
+    "banner",
+    "cms",
+    "filesystem",
+    "nuewire"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Nuewire"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "illuminate/auth": "^11.0|^12.0|^13.0",
+    "illuminate/console": "^11.0|^12.0|^13.0",
+    "illuminate/contracts": "^11.0|^12.0|^13.0",
+    "illuminate/database": "^11.0|^12.0|^13.0",
+    "illuminate/filesystem": "^11.0|^12.0|^13.0",
+    "illuminate/http": "^11.0|^12.0|^13.0",
+    "illuminate/pagination": "^11.0|^12.0|^13.0",
+    "illuminate/routing": "^11.0|^12.0|^13.0",
+    "illuminate/support": "^11.0|^12.0|^13.0",
+    "illuminate/translation": "^11.0|^12.0|^13.0",
+    "illuminate/validation": "^11.0|^12.0|^13.0",
+    "illuminate/view": "^11.0|^12.0|^13.0",
+    "livewire/livewire": "^3.6|^4.0.3",
+    "nuewire/filesystem": "^1.0",
+    "nuewire/logs": "^1.0",
+    "nuewire/support": "^1.0"
+  },
+  "require-dev": {
+    "nuewire/platform": "^2.1.3",
+    "orchestra/testbench": "^9.0|^10.0|^11.0",
+    "phpunit/phpunit": "^11.0|^12.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Nuewire\\Banner\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Nuewire\\Banner\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Nuewire\\Banner\\BannerServiceProvider"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "phpunit"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "suggest": {
+    "nuewire/acl": "Adds granular Banner permissions.",
+    "nuewire/platform": "Adds Banner to Content and dashboard widgets."
+  }
+}
